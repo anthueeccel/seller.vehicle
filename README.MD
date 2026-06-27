@@ -4,9 +4,17 @@
 
 Study simple project to simulate Legacy system and new module integrations.
 
+## Project Rodmap
+
+| Stage            | Description                                                     |
+| ---------------- | --------------------------------------------------------------- |
+| **MS-Vehicle**   | .NET 10 Minimal Api microservice having Postgres db and EF core |
+| **Monolyth MVC** | Simulate legacy monolyth system                                 |
+
 ## Project Structure
 
-`├── 1. Monolyth_MVC (Legacy System)
+```
+├── 1. Monolyth_MVC (Legacy System)
 │    └── ASP.NET Core MVC (.NET 10)
 │    └── NHibernate (or Entity Framework)
 │    └── Database: MS-SQL or Oracle Express
@@ -14,4 +22,5 @@ Study simple project to simulate Legacy system and new module integrations.
 ├── 2. Microservice_Vehicles (New Module)
 │    └── Minimal APIs (.NET 10)
 │    └── Entity Framework Core
-│    └── Database: PostgreSQL`
+│    └── Database: PostgreSQL
+```
