@@ -56,3 +56,7 @@ WebStore-Bruno/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Frontend libs and node_modules
+wwwroot/lib/ 
+node_modules/
