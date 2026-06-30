@@ -1,0 +1,45 @@
+@model IEnumerable<ClientWithRoleViewModel>
+
+@{
+    ViewData["Title"] = "Clients";
+}
+
+<h1>Clients</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.Client.Id)</th>
+            <th>@Html.DisplayNameFor(m => m.Client.FirstName)</th>
+            <th>@Html.DisplayNameFor(m => m.Client.LastName)</th>
+            <th>@Html.DisplayNameFor(m => m.Client.Email)</th>
+            <th>@Html.DisplayNameFor(m => m.Client.CountryPhoneCode)</th>
+            <th>@Html.DisplayNameFor(m => m.Client.Phone)</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Client.Id</td>
+                <td>@item.Client.FirstName</td>
+                <td>@item.Client.LastName</td>
+                <td>@item.Client.Email</td>
+                <td>@item.Client.CountryPhoneCode</td>
+                <td>@item.Client.Phone</td>
+                <td>@(item.Role.HasValue ? item.Role.ToString() : "-")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Client.Id" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="Edit" asp-route-id="@item.Client.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Client.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,53 @@
+@model Client
+
+@{
+    ViewData["Title"] = "Create Client";
+}
+
+<h1>Create Client</h1>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="FirstName" class="form-label"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="LastName" class="form-label"></label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" type="email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Phone" class="form-label"></label>
+        <div class="input-group">
+            <select class="form-select" name="countryPhoneCode">
+                <option value="">-- Country (Code) --</option>
+                @foreach (var country in (IList<CountryPhoneCodeItem>)ViewBag.CountryPhoneCodes)
+                {
+                    <option value="@country.dial_code">@country.name (@country.dial_code)</option>
+                }
+            </select>
+            <input asp-for="Phone" class="form-control" placeholder="Phone number" />
+        </div>
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <input type="submit" value="Create" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
