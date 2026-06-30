@@ -1,0 +1,38 @@
+@model UserViewModel
+
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<h1>User Details</h1>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.User.Id)</dt>
+        <dd class="col-sm-10">@Model.User.Id</dd>
+
+        <dt class="col-sm-2">Client</dt>
+        <dd class="col-sm-10">@Model.ClientFullName</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.User.Role)</dt>
+        <dd class="col-sm-10">@Model.User.Role</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(m => m.User.IsActive)</dt>
+        <dd class="col-sm-10">
+            @if (Model.User.IsActive)
+            {
+                <span class="badge bg-success">Active</span>
+            }
+            else
+            {
+                <span class="badge bg-secondary">Inactive</span>
+            }
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.User.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Delete" asp-route-id="@Model.User.Id" class="btn btn-danger">Delete</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

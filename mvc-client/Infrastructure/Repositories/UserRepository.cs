@@ -1,5 +1,6 @@
 using mvc_client.Models;
 using NHibernate;
+using NHibernate.Linq;
 
 public class UserRepository
 {
@@ -19,13 +20,13 @@ public class UserRepository
     public IList<User> GetAll()
     {
         using var session = _factory.OpenSession();
-        return session.Query<User>().ToList();
+        return session.Query<User>().Fetch(u => u.Client).ToList();
     }
 
     public User? Get(int id)
     {
         using var session = _factory.OpenSession();
-        return session.Get<User>(id);
+        return session.Query<User>().Fetch(u => u.Client).FirstOrDefault(u => u.Id == id);
     }
 
     public void Save(User user)
