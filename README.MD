@@ -1,6 +1,6 @@
-![.Net](http://img.shields.io/badge/-v10.0-008999?style=flat-square&logo=.net&logoColor=ffffff) ![last_commit](https://img.shields.io/github/last-commit/anthueeccel/seller.vehicle) ![license](https://img.shields.io/github/license/anthueeccel/seller.vehicle)
+![.Net](http://img.shields.io/badge/-v10.0-008999?style=flat-square&logo=.net&logoColor=ffffff) [![build](https://github.com/anthueeccel/seller.vehicle/actions/workflows/dotnet.yml/badge.svg)](https://github.com/anthueeccel/seller.vehicle/actions/workflows/dotnet.yml) ![last_commit](https://img.shields.io/github/last-commit/anthueeccel/seller.vehicle) ![license](https://img.shields.io/github/license/anthueeccel/seller.vehicle)
 
-<!-- [![build-test](https://github.com/anthueeccel/seller.vehicle/actions/workflows/dotnet.yml/badge.svg)](https://github.com/anthueeccel/seller.vehicle/actions/workflows/dotnet.yml) -->
+
 
 ## Overview
 
