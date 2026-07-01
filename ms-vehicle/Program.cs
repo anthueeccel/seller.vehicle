@@ -13,7 +13,7 @@ var app = builder.Build();
 var vehicles = new List<Vehicle>
 {
     new Vehicle(1, "Toyota", "Corolla", 2023, true, 1205),
-    new Vehicle(2, "Honda", "Civic", 2022, true, 1246),
+    new Vehicle(2, "Honda", "Civic", 2022, true, null),
     new Vehicle(3, "Opel", "Corsa", 2025, true, 1205)
 };
 
@@ -86,12 +86,26 @@ vehicleGroup.MapPost("/", (Vehicle newVehicle) =>
     return Results.Created($"/vehicles/{newVehicle.Id}", newVehicle);
 });
 
-vehicleGroup.MapPut("/{id:int}", (int id, Vehicle updatedVehicle) =>
+vehicleGroup.MapPut("/{id:int}", async (int id, Vehicle updatedVehicle, IHttpClientFactory httpClientFactory) =>
 {
     var index = vehicles.FindIndex(v => v.Id == id);
     if (index == -1) return Results.NotFound("Vehicle not found.");
-    vehicles[index] = updatedVehicle with { Id = id }; // Mantém o ID original
-    return Results.NoContent();
+
+    var client = httpClientFactory.CreateClient("MvcClient");
+    var clientResponse = await client.GetAsync($"/api/clients/{updatedVehicle.ClientId}");
+
+    if (!clientResponse.IsSuccessStatusCode)
+    {
+        return Results.BadRequest("Invalid ClientId. Client not found.");
+    }
+
+    if (clientResponse.IsSuccessStatusCode)
+    {
+        vehicles[index] = updatedVehicle with { Id = id };
+    }
+    ;
+
+    return Results.Created($"/vehicles/{id}", vehicles[index]);
 });
 
 vehicleGroup.MapPatch("/{id:int}/inactive", (int id) =>
@@ -99,7 +113,6 @@ vehicleGroup.MapPatch("/{id:int}/inactive", (int id) =>
     var vehicle = vehicles.FirstOrDefault(v => v.Id == id);
     if (vehicle == null) return Results.NotFound("Vehicle not found.");
 
-    // Atualiza o status para inativo usando C# Record
     var index = vehicles.IndexOf(vehicle);
     vehicles[index] = vehicle with { IsActive = false };
 
