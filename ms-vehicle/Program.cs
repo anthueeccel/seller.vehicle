@@ -1,19 +1,83 @@
+using System.Net.Http.Json;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpClient("MvcClient", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["MvcClient:BaseUrl"] ?? "http://localhost:5051");
+});
+
 var app = builder.Build();
 
-// Im memory db (initial tests)
+// In memory db (initial tests)
 var vehicles = new List<Vehicle>
 {
-    new Vehicle(1, "Toyota", "Corolla", 2023, true),
-    new Vehicle(2, "Honda", "Civic", 2022, true)
+    new Vehicle(1, "Toyota", "Corolla", 2023, true, 1205),
+    new Vehicle(2, "Honda", "Civic", 2022, true, 1246),
+    new Vehicle(3, "Opel", "Corsa", 2025, true, 1205)
 };
 
 var vehicleGroup = app.MapGroup("/vehicles");
 
-vehicleGroup.MapGet("/{id:int}", (int id) =>
+vehicleGroup.MapGet("/{id:int}", async (int id, IHttpClientFactory httpClientFactory) =>
 {
     var vehicle = vehicles.FirstOrDefault(v => v.Id == id);
-    return vehicle is not null ? Results.Ok(vehicle) : Results.NotFound("Vehicle not found.");
+    if (vehicle is null)
+        return Results.NotFound("Vehicle not found.");
+
+    try
+    {
+        var client = httpClientFactory.CreateClient("MvcClient");
+        var clientResponse = await client.GetAsync($"/api/clients/{vehicle.ClientId}");
+
+        if (clientResponse.IsSuccessStatusCode)
+        {
+            var clientData = await clientResponse.Content.ReadFromJsonAsync<object>();
+            return Results.Ok(new
+            {
+                vehicle = new
+                {
+                    vehicle.Id,
+                    vehicle.Make,
+                    vehicle.Model,
+                    vehicle.Year,
+                    vehicle.IsActive,
+                    vehicle.ClientId
+                },
+                client = clientData
+            });
+        }
+
+        return Results.Ok(new
+        {
+            vehicle = new
+            {
+                vehicle.Id,
+                vehicle.Make,
+                vehicle.Model,
+                vehicle.Year,
+                vehicle.IsActive,
+                vehicle.ClientId
+            },
+            message = "Not able to retrieve Client's info. try again."
+        });
+    }
+    catch
+    {
+        return Results.Ok(new
+        {
+            vehicle = new
+            {
+                vehicle.Id,
+                vehicle.Make,
+                vehicle.Model,
+                vehicle.Year,
+                vehicle.IsActive,
+                vehicle.ClientId
+            },
+            message = "Not able to retrieve Client's info. try again."
+        });
+    }
 });
 
 vehicleGroup.MapPost("/", (Vehicle newVehicle) =>
