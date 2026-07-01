@@ -1,23 +1,22 @@
-![.Net](http://img.shields.io/badge/-v10.0-008999?style=flat-square&logo=.net&logoColor=ffffff) ![last_commit](https://img.shields.io/github/last-commit/anthueeccel/seller.vehicle) ![license](https://img.shields.io/github/license/anthueeccel/seller.vehicle)
-
-<!-- [![build-test](https://github.com/anthueeccel/seller.vehicle/actions/workflows/dotnet.yml/badge.svg)](https://github.com/anthueeccel/seller.vehicle/actions/workflows/dotnet.yml) -->
+![.Net](http://img.shields.io/badge/-v10.0-008999?style=flat-square&logo=.net&logoColor=ffffff) [![build-test](https://github.com/anthueeccel/seller.vehicle/actions/workflows/dotnet.yml/badge.svg)](https://github.com/anthueeccel/seller.vehicle/actions/workflows/dotnet.yml) ![last_commit](https://img.shields.io/github/last-commit/anthueeccel/seller.vehicle) ![license](https://img.shields.io/github/license/anthueeccel/seller.vehicle)
 
 ## Overview
 
-Study simple project to simulate Legacy system and new module integrations.
+Study simple project to simulate Legacy system and new module integration.
+The ms-vehicle is the new module accessing the legacy app to fetch data of the client and vehicle information.
 
 ## Tech Stack
 
-| App            | Framework                  | ORM                   | Database        |
-| -------------- | -------------------------- | --------------------- | --------------- |
-| **mvc-client** | .NET 10 / ASP.NET Core MVC | NHibernate            | Oracle Database |
-| **ms-vehicle** | .NET 10 / Minimal API      | Entity Framework Core | PostgreSQL      |
+| App            | Framework                                                        |
+| -------------- | ---------------------------------------------------------------- |
+| **mvc-client** | .NET 10 / ASP.NET Core MVC, NHibernate, Oracle Database (Docker) |
+| **ms-vehicle** | .NET 10 / Minimal API, In Memory Data                            |
 
 ## Project Rodmap
 
 | Stage          | Description                                                    |
 | -------------- | -------------------------------------------------------------- |
-| **MS-Vehicle** | .NET 10 Minimal API microservice with PostgreSQL and EF Core   |
+| **MS-Vehicle** | .NET 10 Minimal API microservice with In Memory data           |
 | **MVC-Client** | .NET 10 MVC monolithic app with NHibernate and Oracle Database |
 
 ## Project Structure
@@ -30,8 +29,7 @@ Study simple project to simulate Legacy system and new module integrations.
 │
 ├── 2. ms-vehicle (New Module)
 │    └── Minimal APIs (.NET 10)
-│    └── Entity Framework Core
-│    └── Database: PostgreSQL
+│    └── Database: In Memory
 ```
 
 ## Helpful CLI
@@ -55,3 +53,24 @@ Study simple project to simulate Legacy system and new module integrations.
 
 **Create Local secret to avoid exposing sensitive data**
 dotnet user-secrets set "ConnectionStrings:OracleDb" "User Id=system;Password=<password>;Data Source=localhost:1521/FREEPDB1;"
+
+### How to test:
+
+1. Start mvc-client: `dotnet run --project mvc-client\mvc-client.csproj`
+2. Start ms-vehicle: `dotnet run --project ms-vehicle\seller.csproj`
+3. Call `GET http://localhost:5176/vehicles/1` — should return vehicle + client data
+4. Stop mvc-client and call `GET http://localhost:5176/vehicles/2` — should return vehicle + error message
+5. Call `UPDATE http://localhost:5176/vehicles/2` - should return vehicle and clientId
+
+```
+{
+  "id": 2,
+  "make": "Honda",
+  "model": "Class",
+  "year": 2023,
+  "isActive": false,
+  "clientId": 1204
+}
+```
+
+6. Call `GET http://localhost:5176/vehicles/2` — should return vehicle + client data
